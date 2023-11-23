@@ -1,0 +1,58 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  width: 30vmin;
+  pointer-events: none;
+}
+
+.App-side-image {
+  position: absolute;
+  top: 50%; /* 调整为所需的垂直位置 */
+  height: 60vmin;
+  width: 80vmin;
+  transform: translateY(-50%); /* 垂直居中 */
+}
+
+.App-side-image.left {
+  left: 0; /* 左侧图片位置 */
+}
+
+.App-side-image.right {
+  right: 0; /* 右侧图片位置 */
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    display : inline-block;
+  }
+}
+
+.App-header {
+
+  background-color: #282c34;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
