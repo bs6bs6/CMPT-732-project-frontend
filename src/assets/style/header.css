@@ -1,0 +1,37 @@
+
+.Header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    grid-template-areas: "nav";
+  }
+  
+.Nav {
+  display: grid; /* 使用 grid 布局 */
+  grid-area: nav; /* 指定 grid 区域 */
+  grid-template-columns: repeat(4, auto); /* 为每个导航项创建列 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+}
+
+.Nav a {
+  color: white;
+  margin: 0 10px; /* 调整边距 */
+  text-decoration: none; /* 移除下划线 */
+  padding: 10px; /* 增加内边距以提供更大的点击区域 */
+  transition: background-color 0.3s, color 0.3s; /* 平滑过渡效果 */
+  border-radius: 25px; /* 圆角边框 */
+}
+
+/* 悬浮状态 */
+.Nav a:hover {
+  background-color: white; /* 悬浮时背景色 */
+  color: #333; /* 悬浮时文字颜色 */
+}
+  
+.Flag {
+  position: absolute;
+  margin-left: 0px;
+  height: 5vmin;
+}

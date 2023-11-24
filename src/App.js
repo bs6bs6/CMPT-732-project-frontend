@@ -1,15 +1,13 @@
 import AppRoutes from './router/Route';
-import { BrowserRouter as Router } from 'react-router-dom';
+import Header from './components/Header';
 import './assets/style/reset.css';
 
 function App() {
-
   return (
-  <Router>
     <div className="App">
+      <Header />
       <AppRoutes />
     </div>
-  </Router>
   );
 }
 

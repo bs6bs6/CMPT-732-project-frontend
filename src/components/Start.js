@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import logo from '../us_flag.svg';
-import biden from '../svg/joe-biden.svg';
-import trump from '../svg/trump.svg';
+import logo from '../assets/svg/us_flag.svg';
+import biden from '../assets/svg/joe-biden.svg';
+import trump from '../assets/svg/trump.svg';
 
 function Start() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function Start() {
         <img src={biden} className="App-side-image left" alt="biden" />
        
         <img src={logo} className="App-logo" alt="logo" />
-        <Button variant="contained" color="primary" onClick={handleClick}>
+        <Button variant="contained" color="primary" onClick={handleClick} style={{ borderRadius: '20px' }} >
           start
         </Button>
         <p>

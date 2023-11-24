@@ -5,7 +5,7 @@ import Start from '../components/Start';
 const AppRoutes = () => {
     return (
       <Routes>
-        <Route path="/" exact element={<Start />} />
+        <Route path="/"  element={<Start />} />
         <Route path="/home" element={<Home />} />
       </Routes>
     );
