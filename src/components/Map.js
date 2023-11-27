@@ -1,100 +1,81 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef,useEffect, useState } from "react";
 import USAMap from "react-usa-map";
 import statesJson from "../assets/states.json";
 
 import Button from "@mui/material/Button";
 
 export default function Map() {
-  const states = statesJson.data;
-  const [condition, setCondition] = useState({
-    ongoing: false,
-    end: false,
-    progNum: 0,
-    correctCnt: 0,
-    falseCnt: 0,
-    failed: false,
-    quizMode: null
-  });
-  const [quizArray, setQuizArray] = useState(states);
-  const [msg, setMsg] = useState("");
-  const [qAbbreviation, setqAbbreviation] = useState(null);
-  const [aAbbreviation, setaAbbreviation] = useState(null);
+  const states = statesJson;
+  
   const [colorMap, setColorMap] = useState({});
-
-  const shuffle = ([...array]) => {
-    for (let i = array.length - 1; i >= 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
-
-  useEffect(() => {
-    setQuizArray((quizArray) => shuffle(quizArray));
-    console.log("shuffled");
-  }, [condition.end]);
-
-  useEffect(() => {
-    setqAbbreviation(quizArray[condition.progNum].attributes.abbreviation);
-  }, [quizArray, condition.progNum]);
+  const [showBubble, setShowBubble] = useState(false); 
+  const [bubblePosition, setBubblePosition] = useState({ x: 0, y: 0 }); 
+  const [data, setData] = useState(''); 
+  const mapRef = useRef(null);
 
   const mapHandler = (e) => {
-    const { ongoing, end, progNum, correctCnt, falseCnt, failed } = condition;
-    if (end || progNum >= 50) return;
-    if (ongoing) {
-      const guessAbbreviation = e.target.dataset.name;
-      setaAbbreviation(guessAbbreviation);
-      const qName = quizArray[condition.progNum].attributes.name;
-      if (guessAbbreviation === qAbbreviation) {
-        setMsg(`You Got It Right! It was ${qName}.`);
-        const nextProgNum = progNum + 1;
-        if (failed)
-          setCondition({ ...condition, failed: false, progNum: nextProgNum });
-        else {
-          setCondition({
-            ...condition,
-            correctCnt: correctCnt + 1,
-            progNum: nextProgNum
-          });
-        }
-      } else {
-        setMsg(`Not Correct! That State Uses This Sign. Try Again.`);
-        if (!failed) {
-          setCondition({ ...condition, falseCnt: falseCnt + 1, failed: true });
-        }
-        const newColorMap = colorMap;
-        newColorMap[guessAbbreviation] = { fill: "#000" };
-        setColorMap(newColorMap);
-        console.log(newColorMap);
-      }
+    const cur = e.target.dataset.name;
+    console.log(e.target.title);
+    if(showBubble===false){
+      const newColorMap = {...colorMap};
+      newColorMap[cur] = { fill: "#FF69B4"};
+      setColorMap(newColorMap);
+      console.log(newColorMap);
+      const mapRect = mapRef.current.getBoundingClientRect();
+
+      const bubbleX = e.pageX - mapRect.left;
+      const bubbleY = e.pageY - mapRect.top;
+      setBubblePosition({ x: bubbleX, y: bubbleY });
+      const newData = `${states[cur]}`;
+      setData(newData);
+      setShowBubble(true);
+    }else{
+      const newColorMap = {...colorMap};
+      delete newColorMap[cur];
+      setColorMap(newColorMap);
+      console.log(newColorMap);     
+      setShowBubble(false);
+
     }
+    // 获取地图元素的位置
+
+    
   };
 
-  const startSession = () => {
-    setCondition({ ...condition, ongoing: true, progNum: 0, end: false });
-  };
 
   return (
-    <div>
+    <div ref={mapRef} style={{ position: 'relative' }}>
       <USAMap customize={colorMap} onClick={mapHandler} />
-      <br></br>
-      {condition.ongoing && qAbbreviation ? (
-        <img src={`/images/highway/${qAbbreviation}.PNG`} alt="quizImage" />
-      ) : (
-        "check"
+      {showBubble && (
+          <div
+          style={{
+            position: 'absolute',
+            left: bubblePosition.x,
+            top: bubblePosition.y,
+            border: '1px solid black',
+            backgroundColor: 'rgba(0, 0, 0, 0.6)', // 半透明黑色背景
+            color: 'white', // 白色文本
+            padding: '10px',
+            borderRadius: '10px', // 圆角边框
+            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' // 阴影效果
+          }}
+        >
+          {data}
+          <br />
+          <a
+            href="#" // 链接地址，或者可以使用 onClick 事件处理函数打开模态窗口
+            style={{ color: 'lightblue' }} // 设置链接样式
+            onClick={(e) => {
+              e.preventDefault();
+              // 打开新窗口的逻辑
+            }}
+          >
+            查看详情
+          </a>
+        </div>
       )}
-      <br></br>
-      {msg}
-      {condition.ongoing && aAbbreviation ? (
-        <img src={`/images/highway/${aAbbreviation}.PNG`} alt="quizImage" />
-      ) : (
-        ""
-      )}
-      <br></br>
-      {`Correct: ${condition.correctCnt}`}
-      {`Missed: ${condition.falseCnt}`}
-      <br></br>
-      <Button onClick={startSession}>Start</Button>
+      
     </div>
+    
   );
 }

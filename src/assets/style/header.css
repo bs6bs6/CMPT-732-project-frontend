@@ -1,37 +1,40 @@
-
 .Header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     background-color: #333;
     color: white;
     padding: 10px 20px;
     text-align: center;
-    grid-template-areas: "nav";
+    z-index: 1000;
+    display: flex; /* 使用 Flexbox 布局 */
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
   }
   
-.Nav {
-  display: grid; /* 使用 grid 布局 */
-  grid-area: nav; /* 指定 grid 区域 */
-  grid-template-columns: repeat(4, auto); /* 为每个导航项创建列 */
-  align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
-}
-
-.Nav a {
-  color: white;
-  margin: 0 10px; /* 调整边距 */
-  text-decoration: none; /* 移除下划线 */
-  padding: 10px; /* 增加内边距以提供更大的点击区域 */
-  transition: background-color 0.3s, color 0.3s; /* 平滑过渡效果 */
-  border-radius: 25px; /* 圆角边框 */
-}
-
-/* 悬浮状态 */
-.Nav a:hover {
-  background-color: white; /* 悬浮时背景色 */
-  color: #333; /* 悬浮时文字颜色 */
-}
+  .Nav {
+    display: flex; /* 使用 Flexbox 布局 */
+    align-items: center; /* 垂直居中 */
+  }
   
-.Flag {
-  position: absolute;
-  margin-left: 0px;
-  height: 5vmin;
-}
+  .Nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+    padding: 10px;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 25px;
+  }
+  
+  .Nav a:hover {
+    background-color: white;
+    color: #333;
+  }
+    
+  .Flag {
+    position: absolute;
+    left: 20px; /* 位于左侧 */
+    height: 5vmin;
+  }
+  

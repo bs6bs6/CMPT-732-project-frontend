@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import logo from '../assets/svg/us_flag.svg';
 import biden from '../assets/svg/joe-biden.svg';
 import trump from '../assets/svg/trump.svg';
+import '../assets/style/start.css';
 
 function Start() {
   const navigate = useNavigate();
