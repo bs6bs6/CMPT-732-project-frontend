@@ -1,62 +1,15 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import ReactEcharts from "echarts-for-react";
 import * as echarts from "echarts";
 import geoJson from './USMapData.json'
+import AvatarSelector from './AvatarSelector';
+import ApiService from '../service/ApiService';
 
 const data = [
-  { name: 'Alabama', value: 4822023 },
-  { name: 'Alaska', value: 731449 },
-  { name: 'Arizona', value: 6553255 },
-  { name: 'Arkansas', value: 2949131 },
-  { name: 'California', value: 38041430 },
-  { name: 'Colorado', value: 5187582 },
-  { name: 'Connecticut', value: 3590347 },
-  { name: 'Delaware', value: 917092 },
-  { name: 'District of Columbia', value: 632323 },
-  { name: 'Florida', value: 19317568 },
-  { name: 'Georgia', value: 9919945 },
-  { name: 'Hawaii', value: 1392313 },
-  { name: 'Idaho', value: 1595728 },
-  { name: 'Illinois', value: 12875255 },
-  { name: 'Indiana', value: 6537334 },
-  { name: 'Iowa', value: 3074186 },
-  { name: 'Kansas', value: 2885905 },
-  { name: 'Kentucky', value: 4380415 },
-  { name: 'Louisiana', value: 4601893 },
-  { name: 'Maine', value: 1329192 },
-  { name: 'Maryland', value: 5884563 },
-  { name: 'Massachusetts', value: 6646144 },
-  { name: 'Michigan', value: 9883360 },
-  { name: 'Minnesota', value: 5379139 },
-  { name: 'Mississippi', value: 2984926 },
-  { name: 'Missouri', value: 6021988 },
-  { name: 'Montana', value: 1005141 },
-  { name: 'Nebraska', value: 1855525 },
-  { name: 'Nevada', value: 2758931 },
-  { name: 'New Hampshire', value: 1320718 },
-  { name: 'New Jersey', value: 8864590 },
-  { name: 'New Mexico', value: 2085538 },
-  { name: 'New York', value: 19570261 },
-  { name: 'North Carolina', value: 9752073 },
-  { name: 'North Dakota', value: 699628 },
-  { name: 'Ohio', value: 11544225 },
-  { name: 'Oklahoma', value: 3814820 },
-  { name: 'Oregon', value: 3899353 },
-  { name: 'Pennsylvania', value: 12763536 },
-  { name: 'Rhode Island', value: 1050292 },
-  { name: 'South Carolina', value: 4723723 },
-  { name: 'South Dakota', value: 833354 },
-  { name: 'Tennessee', value: 6456243 },
-  { name: 'Texas', value: 26059203 },
-  { name: 'Utah', value: 2855287 },
-  { name: 'Vermont', value: 626011 },
-  { name: 'Virginia', value: 8185867 },
-  { name: 'Washington', value: 6897012 },
-  { name: 'West Virginia', value: 1855413 },
-  { name: 'Wisconsin', value: 5726398 },
-  { name: 'Wyoming', value: 576412 },
-  { name: 'Puerto Rico', value: 3667084 }
-];
+  {name: 'Alabama',value: 1},
+  {name: 'California',value: 0},
+  {name: 'Ohio',value: 1},
+]
 
 echarts.registerMap('USA', geoJson, {
   Alaska: {     
@@ -76,55 +29,136 @@ echarts.registerMap('USA', geoJson, {
   }
 });
 
-const mapOption = {
-  tooltip: {
-    trigger: 'item', // 触发类型，'item' 表示数据项图形触发
-    formatter: function (params) {
-      return `${params.name}<br/>Population: ${params.value ? params.value.toLocaleString() : 'N/A'}`;
-    }
-  },
-  visualMap: {
-    left: '1200pt',
-    top : '100pt',
-    min: 500000,
-    max: 38000000,    
-    inRange: {      
-      color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
-    },
-    text: ['High', 'Low'],
-    calculable: true
-  },
-  
-  series: [
-    {
-      id: 'tweets by state',
-      type: 'map',
-      roam: true,
-      map: 'USA',
-      animationDurationUpdate: 1000,
-      universalTransition: true,
-      scaleLimit: { 
-        min: 0.5,    
-        max: 8    
-      },
-      data: data
-    }
-  ]
-};
 
-
-export default function USMapChart() {    
+export default function USMapChart() {   
 
   const [selectedState, setSelectedState] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [mapData, setMapData] = useState([]);
+  const [bidenData, setBidenData] = useState([]);
+  const [trumpData, setTrumpData] = useState([]);
+  const [competeData, setCompeteData] = useState([]);
+
+
+  useEffect(() => {
+    const fetchBidenData = async () => {
+      try {
+        const data = await ApiService.getData('/getBiden');
+        setBidenData(data);
+        setMapData(data); // default map data:biden
+      } catch (error) {
+        console.error('Fetching Biden data failed', error);
+      }
+    };
+
+    const fetchTrumpData = async () => {
+      try {
+        const data = await ApiService.getData('/getTrump');
+        setTrumpData(data);
+      } catch (error) {
+        console.error('Fetching Trump data failed', error);
+      }
+    };
+
+    const fetchCompeteData = async () => {
+      try {
+        const data = await ApiService.getData('/getCompete');
+        setCompeteData(data);
+      } catch (error) {
+        console.error('Fetching compete data failed', error);
+      }
+    };
+
+    fetchBidenData();
+    fetchTrumpData();
+    fetchCompeteData();
+
+  }, []);
+
+
+  const mapOption = {
+    tooltip: {
+      trigger: 'item', 
+      formatter: function (params) {
+        return `${params.name}<br/>Tweet Number: ${params.value ? params.value.toLocaleString() : 'N/A'}`;
+      }
+    },
+    visualMap: {
+      left: '1200pt',
+      top : '100pt',
+      // min: 10,
+      // max: 34512,    
+      // inRange: {      
+      //  color: ['#e6f598', '#fee08b', '#fdae61', '#f46d43', '#d53e4f', '#9e0142']
+      // },
+      // text: ['High', 'Low'],
+      type: 'piecewise',
+      pieces: [
+        { min: 0, max: 100, color: '#e5f5e0' },
+        { min: 100, max: 200, color: '#c7e9c0' },
+        { min: 200, max: 300, color: '#a1d99b' },
+        { min: 300, max: 400, color: '#74c476' },
+        { min: 400, max: 500, color: '#41ab5d' },
+        { min: 500, max: 1000, color: '#238b45' },
+        { min: 1000, max: 1500, color: '#006d2c' },
+        { min: 1500, max: 2000, color: '#00441b' },
+        { min: 2000, max: 2500, color: '#003d1b' },
+        { min: 2500, max: 3000, color: '#003315' },
+        { min: 3000, max: 3500, color: '#002c0f' },
+        { min: 3500, max: 5000, color: '#002109' },
+        { min: 5000, max: 10000, color: '#001a06' },
+        { min: 10000, max: 20000, color: '#001b03' },
+        { min: 20000, color: '#001702' }
+      ],
+
+      calculable: true
+    },
+    
+    series: [
+      {
+        id: 'tweets by state',
+        type: 'map',
+        roam: true,
+        map: 'USA',
+        animationDurationUpdate: 1000,
+        universalTransition: true,
+        scaleLimit: { 
+          min: 0.5,    
+          max: 8    
+        },
+        data: mapData,
+      }
+    ]
+  };
+  function processData(data){
+    return data.map(item => ({
+      name: item.name, 
+      value: item.value,
+      itemStyle: {
+        color: item.value === 1 ? '#ff4d4d' : '#4d79ff', // Trump: red, Biden: blue
+      }
+    }));
+  }
+  function handleCompeteClick() {
+    const processedData = processData(competeData)
+    setMapData(processedData);
+  }
+  
 
   const handleMapClick = (params) => {
     setSelectedState(params.data);
     setShowPopup(true);
   };
 
+  const handleAvatarSelection = (avatarType) => {
+    console.log("选中的头像是: ", avatarType);
+    // 这里您可以处理选中头像后的逻辑
+    setMapData(avatarType === 'biden' ? bidenData : trumpData)
+  };
+
   return (
-    <>
+    <div>
+      <AvatarSelector onAvatarSelect={handleAvatarSelection} onCompeteClick={handleCompeteClick}/>
       <ReactEcharts
         option={mapOption}
         style={{ width: "100vw", height: "100vh" }}
@@ -133,23 +167,24 @@ export default function USMapChart() {
         }}
       />
     {showPopup && selectedState && (
-  <div style={{
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "white",
-    padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-    zIndex: 1001 // 确保弹窗在地图之上
-  }}>
-    <h3>{selectedState.name}</h3>
-    <p>Population: {selectedState.value ? selectedState.value.toLocaleString() : 'N/A'}</p>
-    <button onClick={() => setShowPopup(false)}>Close</button>
-  </div>
-)}
+        <div style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          backgroundColor: "white",
+          padding: "20px",
+          borderRadius: "10px",
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+          zIndex: 1001 // 确保弹窗在地图之上
+        }}>
+          <h3>{selectedState.name}</h3>
+          <p>Tweets Number: {selectedState.value ? selectedState.value.toLocaleString() : 'N/A'}</p>
+          <p>Trending words: {selectedState.value ? selectedState.value.toLocaleString() : 'N/A'}</p>
 
-    </>
+          <button onClick={() => setShowPopup(false)}>Close</button>
+        </div>
+    )}
+    </div>
   );
 };

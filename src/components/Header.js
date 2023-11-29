@@ -9,8 +9,10 @@ function Header() {
       <nav className="Nav">
         <img src={flag} className="Flag" alt="flag" />
 
-        <a href = "/home">Home</a>
-        <a href = "/about">about</a>
+        <a href = "/home">Trending</a>
+        <a href = "/language">Language</a>
+        <a href = "/daily">DailyReport</a>
+        
       </nav>
     </header>
   );
