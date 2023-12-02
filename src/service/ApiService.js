@@ -17,5 +17,16 @@ const getData = async (endpoint) => {
   }
 };
 
+const getWords = async (params) => {
+  try {
+    const response = await apiClient.get('/getWords', { params });
+    return response.data; // 返回响应数据
+  } catch (error) {
+    // 在这里处理错误
+    throw error;
+  }
+};
 
-export default {getData};
+
+
+export default {getData,getWords};

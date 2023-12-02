@@ -12,7 +12,10 @@ function Header() {
         <a href = "/home">Trending</a>
         <a href = "/language">Language</a>
         <a href = "/daily">DailyReport</a>
-        
+        <a href = "/update">UpdatingTweets</a>
+        <a href = "/test">Predict</a>
+
+
       </nav>
     </header>
   );

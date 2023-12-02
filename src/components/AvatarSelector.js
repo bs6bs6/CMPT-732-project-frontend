@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import biden from '../assets/svg/joe-biden.svg';
 import trump from '../assets/svg/trump.svg';
 import Button from '@mui/material/Button';
+import Switch, { SwitchProps } from '@mui/material/Switch';
 
-function AvatarSelector({ onAvatarSelect , onCompeteClick}) {
+function AvatarSelector({ onAvatarSelect , onCompeteClick, onChecked}) {
     const [selectedAvatar, setSelectedAvatar] = useState('');
+    const [isChecked, setChecked] = useState(false);
+
+    const handleChecked = (isChecked) => {
+        setChecked(!isChecked);
+        onChecked(!isChecked);
+    }
 
     const handleAvatarClick = (avatarType) => {
         setSelectedAvatar(avatarType);
@@ -21,7 +28,7 @@ function AvatarSelector({ onAvatarSelect , onCompeteClick}) {
 
     return (
         <div style={{
-            position: 'absolute',
+                    position: 'absolute',
                     top: '20%', // 设置为视口高度的50%
                     left: '50%', // 设置为视口宽度的50%
                     transform: 'translate(-50%, -50%)', // 使用transform进行精确居中
@@ -37,9 +44,19 @@ function AvatarSelector({ onAvatarSelect , onCompeteClick}) {
                 style={getAvatarStyle('biden')}
                 onClick={() => handleAvatarClick('biden')} 
             />
+            <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center', // Center items horizontally in the flex container
+                        justifyContent: 'center', // Center items vertically in the flex container
+            }}>
             <Button variant="contained" onClick = {onCompeteClick} color="primary" style={{ borderRadius: '20px' }} >
              compete
             </Button>
+             <Switch checked={isChecked} onChange={()=>handleChecked(isChecked)}>
+                check
+            </Switch>
+            </div>
             <img 
                 src={trump}
                 alt="Donald Trump Avatar"

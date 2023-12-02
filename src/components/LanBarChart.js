@@ -6,21 +6,77 @@ const LanBarChart = () => {
   let myChart = null;
 
   const getOption = () => {
-    return {
-      title: {
-        text: 'language'
+    return ({
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          // Use axis to trigger tooltip
+          type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+        }
       },
-      tooltip: {},
+      legend: {},
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
       xAxis: {
-        data: ['english', 'germany', 'spanish', 'french', 'chinese', 'japanese']
+        type: 'value'
       },
-      yAxis: {},
-      series: [{
-        name: 'tweets by language',
-        type: 'bar',
-        data: [5, 20, 36, 10, 10, 20]
-      }]
-    };
+      yAxis: {
+        type: 'category',
+        data: [
+          "German",
+          "Indonesian",
+          "Romanian",
+          "English",
+          "Danish",
+          "Dutch",
+          "French",
+          "Vietnamese",
+          "Spanish"
+        ],
+      },
+      series: [
+        {
+          name: 'negetive',
+          type: 'bar',
+          stack: 'total',
+          label: {
+            show: true
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          data: [320, 302, 301, 334, 390, 330, 320]
+        },
+        {
+          name: 'neutural',
+          type: 'bar',
+          stack: 'total',
+          label: {
+            show: true
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          data: [120, 132, 101, 134, 90, 230, 210]
+        },
+        {
+          name: 'positive',
+          type: 'bar',
+          stack: 'total',
+          label: {
+            show: true
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          data: [220, 182, 191, 234, 290, 330, 310]
+        }
+      ]
+    });
   };
 
   useEffect(() => {
@@ -28,7 +84,7 @@ const LanBarChart = () => {
     myChart.setOption(getOption());
   }, []);
 
-  return <div ref={chartRef} style={{ width: '600px', height: '400px' }}></div>;
+  return <div ref={chartRef} style={{ top:'100px', width: '600px', height: '500px' }}></div>;
 };
 
 export default LanBarChart;
