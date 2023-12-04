@@ -10,7 +10,7 @@ function Header() {
         <img src={flag} className="Flag" alt="flag" />
 
         <a href = "/home">Trending</a>
-        <a href = "/language">Language</a>
+        <a href = "/language">State</a>
         <a href = "/daily">DailyReport</a>
         <a href = "/update">UpdatingTweets</a>
         <a href = "/test">Predict</a>

@@ -1,10 +1,70 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect,useState } from 'react';
 import * as echarts from 'echarts';
+import ApiService from '../service/ApiService';
+import biden from '../assets/svg/joe-biden.svg';
+import trump from '../assets/svg/trump.svg';
 
 const LanBarChart = () => {
   const chartRef = useRef(null);
   let myChart = null;
+  const [selectedAvatar, setSelectedAvatar] = useState('');
+  const [bidenData, setBidenData] = useState([]);
+  const [trumpData, setTrumpData] = useState([]);
+  const [currentData, setCurrentData] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const responseBiden = await ApiService.getData('/getBidenState');
+      const responseTrump = await ApiService.getData('/getTrumpState');
+
+      setBidenData(transformDataToSeries(responseBiden));
+      setTrumpData(transformDataToSeries(responseTrump));
+      setCurrentData(transformDataToSeries(responseBiden));
+
+    };
+    fetchData();
+
+  }, []);
+  
+  const transformDataToSeries = (data) => {
+    const negativeData = [];
+    const neutralData = [];
+    const positiveData = [];
+    const categories = [];
+  
+    data.forEach(item => {
+
+      categories.push(item.state);
+      negativeData.push(item.negative);
+      neutralData.push(item.neutral);
+      positiveData.push(item.positive);
+    });
+    return {
+      negativeData,
+      neutralData,
+      positiveData,
+      categories
+    }
+  };
+  // 切换数据展示
+  const handleAvatarClick = (avatarType) => {
+   
+    if (avatarType === 'biden') {
+      setCurrentData(bidenData);
+      console.log(currentData);
+    } else {
+      setCurrentData(trumpData);
+      console.log(currentData);
+    }
+    setSelectedAvatar(avatarType);
+};
+const getAvatarStyle = (avatarType) => ({
+  width: 100,
+  height: 100,
+  borderRadius: '50%',
+  cursor: 'pointer',
+  border: selectedAvatar === avatarType ? '3px solid #007bff' : 'none',
+});
   const getOption = () => {
     return ({
       tooltip: {
@@ -22,21 +82,11 @@ const LanBarChart = () => {
         containLabel: true
       },
       xAxis: {
-        type: 'value'
+        type: 'value', 
       },
       yAxis: {
         type: 'category',
-        data: [
-          "German",
-          "Indonesian",
-          "Romanian",
-          "English",
-          "Danish",
-          "Dutch",
-          "French",
-          "Vietnamese",
-          "Spanish"
-        ],
+        data: currentData.categories
       },
       series: [
         {
@@ -49,7 +99,7 @@ const LanBarChart = () => {
           emphasis: {
             focus: 'series'
           },
-          data: [320, 302, 301, 334, 390, 330, 320]
+          data: currentData.negativeData
         },
         {
           name: 'neutural',
@@ -61,7 +111,7 @@ const LanBarChart = () => {
           emphasis: {
             focus: 'series'
           },
-          data: [120, 132, 101, 134, 90, 230, 210]
+          data: currentData.neutralData
         },
         {
           name: 'positive',
@@ -73,7 +123,7 @@ const LanBarChart = () => {
           emphasis: {
             focus: 'series'
           },
-          data: [220, 182, 191, 234, 290, 330, 310]
+          data: currentData.positiveData
         }
       ]
     });
@@ -81,10 +131,47 @@ const LanBarChart = () => {
 
   useEffect(() => {
     myChart = echarts.init(chartRef.current);
+    // 侦听 currentData 的变化来更新图表
     myChart.setOption(getOption());
-  }, []);
+  }, [selectedAvatar]);
+  
+  return (<div>
+    <div style={{
+              position: 'absolute',
+              top: '20%', 
+              left: '50%', 
+              transform: 'translate(-50%, -50%)', 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              gap: '20px', 
+              zIndex: 1001 
+        }}>
+            <img 
+                src={biden}
+                alt="Joe Biden Avatar"
+                style={getAvatarStyle('biden')}
+                onClick={() => handleAvatarClick('biden')} 
+            />
+            <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center', // Center items horizontally in the flex container
+                        justifyContent: 'center', // Center items vertically in the flex container
+            }}>
 
-  return <div ref={chartRef} style={{ top:'100px', width: '600px', height: '500px' }}></div>;
+            </div>
+            <img 
+                src={trump}
+                alt="Donald Trump Avatar"
+                style={getAvatarStyle('trump')}
+                onClick={() => handleAvatarClick('trump')} 
+            />
+        </div>
+    <div ref={chartRef} style={{ top:'100px', width: '600px', height: '500px' }}></div>
+  </div>
+  )
+  ;
 };
 
 export default LanBarChart;

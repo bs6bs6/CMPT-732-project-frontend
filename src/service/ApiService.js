@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080', // 您的API基地址
+  baseURL: 'http://localhost:8080', 
+  // baseURL: 'http://54.213.254.255/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,9 +11,9 @@ const apiClient = axios.create({
 const getData = async (endpoint) => {
   try {
     const response = await apiClient.get(endpoint);
-    return response.data; // 返回响应数据
+    return response.data; 
   } catch (error) {
-    // 在这里处理错误
+    
     throw error;
   }
 };
@@ -20,9 +21,8 @@ const getData = async (endpoint) => {
 const getWords = async (params) => {
   try {
     const response = await apiClient.get('/getWords', { params });
-    return response.data; // 返回响应数据
+    return response.data; 
   } catch (error) {
-    // 在这里处理错误
     throw error;
   }
 };

@@ -92,7 +92,8 @@ export default function USMapChart() {
   const [option, setOption] = useState(null);
   const [isMap, setIsMap] = useState(true);
   const [wordCloudData, setWordCloudData] = useState([]);
-  const [selectedAvatar, setSelectedAvatar] = useState('biden'); // 默认选中 Biden
+  const [selectedAvatar, setSelectedAvatar] = useState('biden'); 
+  const [isCompete, setIsCompete] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,9 +101,9 @@ export default function USMapChart() {
         const bidenData = await ApiService.getData('/getBiden');
         const trumpData = await ApiService.getData('/getTrump');
         const competeData = await ApiService.getData('/getCompete');
-        // 更新数据，这里假设所有API调用返回相同结构的数据
-        setMapData(bidenData || initData); // 如果bidenData为空，则保留初始数据
-        setBidenData(bidenData);  // 如果需要其他状态，可以添加这些行
+
+        setMapData(bidenData || initData); 
+        setBidenData(bidenData); 
         setTrumpData(trumpData);
         setCompeteData(competeData);
       } catch (error) {
@@ -113,51 +114,102 @@ export default function USMapChart() {
   }, []);
 
   useEffect(() => {
-    const mapOption = {
-      tooltip: {
-        trigger: 'item', 
-        formatter: function (params) {
-          return `${params.name}<br/>Tweet Number: ${params.value ? params.value.toLocaleString() : 'N/A'}`;
-        }
-      },
-      visualMap: {
-        left: 'right',
-        top : '100pt',
-        type: 'piecewise',
-        pieces: [
-          { min: 0, max: 200, color: '#9ebcda' },   // 浅蓝色
-          { min: 200, max: 300, color: '#8c6bb1' }, // 紫色
-          { min: 300, max: 500, color: '#88419d' }, // 深紫色
-          { min: 500, max: 1000, color: '#4d004b' }, // 暗紫色
-          { min: 1000, max: 1500, color: '#4d004b' }, // 同上
-          { min: 1500, max: 2500, color: '#810f7c' }, // 同上
-          { min: 2500, max: 3000, color: '#8c6bb1' }, // 同上
-          { min: 3000, max: 3500, color: '#8c96c6' }, // 同上
-          { min: 3500, max: 5000, color: '#9ebcda' }, // 同上
-          { min: 5000, max: 10000, color: '#6baed6' }, // 深蓝色
-          { min: 10000, max: 20000, color: '#4292c6' }, // 更深蓝色
-          { min: 20000, color: '#2171b5' } // 最深蓝色
-        ],
-  
-        calculable: true
-      },
-      
-      series: [
-        {
-          id: 'tweets',
-          type: 'map',
-          roam: true,
-          map: 'USA',
-          animationDurationUpdate: 1000,
-          universalTransition: true,
-          scaleLimit: { 
-            min: 0.5,    
-            max: 8    
-          },
-          data: mapData
-        }
-      ]
-    };
+    let mapOption;
+    if(isCompete){
+       mapOption = {
+        tooltip: {
+          trigger: 'item', 
+          formatter: function (params) {
+            return `${params.name}<br/>Winner: ${params.value>0 ? "Trump" : 'Biden'}`;
+          }
+        },
+        visualMap: {
+          left: 'right',
+          top : '100pt',
+          type: 'piecewise',
+          pieces: [
+            { min: 0, max: 200, color: '#9ebcda' },   
+            { min: 200, max: 300, color: '#8c6bb1' }, 
+            { min: 300, max: 500, color: '#88419d' }, 
+            { min: 500, max: 1000, color: '#4d004b' }, 
+            { min: 1000, max: 1500, color: '#4d004b' }, 
+            { min: 1500, max: 2500, color: '#810f7c' }, 
+            { min: 2500, max: 3000, color: '#8c6bb1' }, 
+            { min: 3000, max: 3500, color: '#8c96c6' }, 
+            { min: 3500, max: 5000, color: '#9ebcda' }, 
+            { min: 5000, max: 10000, color: '#6baed6' }, 
+            { min: 10000, max: 20000, color: '#4292c6' }, 
+            { min: 20000, color: '#2171b5' } 
+          ],
+    
+          calculable: true
+        },
+        
+        series: [
+          {
+            id: 'tweets',
+            type: 'map',
+            roam: true,
+            map: 'USA',
+            animationDurationUpdate: 1000,
+            universalTransition: true,
+            scaleLimit: { 
+              min: 0.5,    
+              max: 8    
+            },
+            data: mapData
+          }
+        ]
+      };
+    }else{
+       mapOption = {
+        tooltip: {
+          trigger: 'item', 
+          formatter: function (params) {
+            return `${params.name}<br/>Tweet Number: ${params.value ? params.value.toLocaleString() : 'N/A'}`;
+          }
+        },
+        visualMap: {
+          left: 'right',
+          top : '100pt',
+          type: 'piecewise',
+          pieces: [
+            { min: 0, max: 200, color: '#9ebcda' },   
+            { min: 200, max: 300, color: '#8c6bb1' }, 
+            { min: 300, max: 500, color: '#88419d' }, 
+            { min: 500, max: 1000, color: '#4d004b' }, 
+            { min: 1000, max: 1500, color: '#4d004b' }, 
+            { min: 1500, max: 2500, color: '#810f7c' }, 
+            { min: 2500, max: 3000, color: '#8c6bb1' }, 
+            { min: 3000, max: 3500, color: '#8c96c6' }, 
+            { min: 3500, max: 5000, color: '#9ebcda' }, 
+            { min: 5000, max: 10000, color: '#6baed6' }, 
+            { min: 10000, max: 20000, color: '#4292c6' }, 
+            { min: 20000, color: '#2171b5' } 
+          ],
+    
+          calculable: true
+        },
+        
+        series: [
+          {
+            id: 'tweets',
+            type: 'map',
+            roam: true,
+            map: 'USA',
+            animationDurationUpdate: 1000,
+            universalTransition: true,
+            scaleLimit: { 
+              min: 0.5,    
+              max: 8    
+            },
+            data: mapData
+          }
+        ]
+      };
+    }
+    console.log(mapOption);
+    console.log(isCompete);
     const barOption = {
       xAxis: {
         type: 'value'
@@ -187,7 +239,7 @@ export default function USMapChart() {
     }else{
       setOption(barOption);
     }
-  },[mapData,isMap])
+  },[mapData,isMap,isCompete])
 
  
   const echartsRef = useRef(null); // 
@@ -236,11 +288,12 @@ export default function USMapChart() {
   function handleCompeteClick() {
     const processedData = processData(competeData)
     setMapData(processedData);
+    setIsCompete(true);
   }
   
   const fetchWords = async (state, candidate) => {
     try {
-        console.log(state,candidate);
+
         let wordsData = await ApiService.getWords({ state, candidate });
         wordsData = transformDataToWordCloudFormat(wordsData);
         setWordCloudData(wordsData);
@@ -263,9 +316,10 @@ export default function USMapChart() {
   };
 
   const handleAvatarSelection = (avatarType) => {
-    console.log("ava: ", avatarType);
+
     setMapData(avatarType === 'biden' ? bidenData : trumpData)
     setSelectedAvatar(avatarType);
+    setIsCompete(false);
   };
 
   const handleChecked = () => {
@@ -291,16 +345,16 @@ export default function USMapChart() {
           borderRadius: "10px",
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
           zIndex: 1001,
-          minWidth: "300px", // 设置最小宽度
-          maxWidth: "600px", // 设置最大宽度
-          minHeight: "200px", // 设置最小高度
-          maxHeight: "400px", // 设置最大高度
-          // overflow: "auto" // 如果内容超出，显示滚动条
+          minWidth: "300px", 
+          maxWidth: "600px", 
+          minHeight: "200px", 
+          maxHeight: "400px", 
+          // overflow: "auto" 
         }}>
           <h3>{selectedState.name}</h3>
-          <p>Tweets Number: {selectedState.value ? selectedState.value.toLocaleString() : 'N/A'}</p>          
+          {!isCompete&&(<p>Tweets Number: {selectedState.value ? selectedState.value.toLocaleString() : 'N/A'}</p>) }         
           {wordCloudData.length>1&&<div style={{ marginTop: "-80px" }}><WordCloud wordCloudData={wordCloudData}/></div>}
-            {/* 关闭按钮 */}
+
           <button onClick={() => setShowPopup(false)} style={{
             position: "absolute",
             top: 0,

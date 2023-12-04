@@ -91,7 +91,7 @@ const UpdatingBar = () => {
                     type: 'bar',
                     itemStyle: {
                       color: function (param) {
-                        return countryColors[param.value[3]] || '#5470c6';
+                        return countryColors[param.name] || '#5470c6';
                       }
                     },
                     encode: {
@@ -131,13 +131,6 @@ const UpdatingBar = () => {
 
             myChart.current.setOption(option);
 
-            // const updateYear = (year) => {
-            //     let source = data.filter((d) => d[4] === year);
-            //     option.series[0].data = source;
-            //     option.graphic.elements[0].style.text = year;
-            //     myChart.current.setOption(option);
-            // };
-            
             const updateYear = (year) => {
               let source = data.filter(d => d.date === year).map(d => [d.cumulative, d.language]);
               option.series[0].data = source;

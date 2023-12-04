@@ -2,16 +2,11 @@ import React from "react";
 import ReactEcharts from "echarts-for-react";
 import 'echarts-wordcloud';
 
-const mockData = [
-    {name: 'Farrah Abraham',value: 366},
-    {name: 'Faham',value: 666},
-    {name: 'F Abraham',value: 466},
-]
     
 
 export default function WordCloud(props){
     const { wordCloudData } = props;
-    console.log("wordCloudData: ", wordCloudData)
+
     const getOption = () => {
         return {
           series: [{

@@ -15,7 +15,7 @@ function AvatarSelector({ onAvatarSelect , onCompeteClick, onChecked}) {
 
     const handleAvatarClick = (avatarType) => {
         setSelectedAvatar(avatarType);
-        onAvatarSelect(avatarType); // 调用父组件传递的回调函数
+        onAvatarSelect(avatarType); 
     };
 
     const getAvatarStyle = (avatarType) => ({
@@ -29,14 +29,14 @@ function AvatarSelector({ onAvatarSelect , onCompeteClick, onChecked}) {
     return (
         <div style={{
                     position: 'absolute',
-                    top: '20%', // 设置为视口高度的50%
-                    left: '50%', // 设置为视口宽度的50%
-                    transform: 'translate(-50%, -50%)', // 使用transform进行精确居中
-                    display: 'flex', // 使用flex布局
-                    justifyContent: 'center', // 水平居中
-                    alignItems: 'center', // 垂直居中
-                    gap: '20px', // 间距
-                    zIndex: 1001 // 确保弹窗在地图之上
+                    top: '20%', 
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    gap: '20px', 
+                    zIndex: 1001 
         }}>
             <img 
                 src={biden}

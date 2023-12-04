@@ -19,8 +19,6 @@ const AppRoutes = () => {
         <Route path="/daily" element={<DailyReport />} />
         <Route path="/update" element={<UpdatingBar />} />
         <Route path="/test" element={<Test />} />
-
-
       </Routes>
     );
   };
